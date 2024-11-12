@@ -101,60 +101,53 @@ function stopAnimation() {
     clearInterval(animationInterval);
 }
 
-// Очистить сетку (все клетки мертвые)
 function clearGrid() {
-    grid = createGrid();  // Обнуляем всю сетку
-    drawGrid();  // Перерисовываем пустую сетку
+    grid = createGrid(); 
+    drawGrid();  
 }
 
-// Нарисовать пустую сетку сразу
 drawGrid();
 
-// Обработчик кликов по клеткам для изменения их состояния
 canvas.addEventListener('click', (event) => {
-    if (isStarted) return;  // Если игра началась, нельзя менять клетки
+    if (isStarted) return;  
 
     const x = Math.floor(event.offsetX / cellSize);
     const y = Math.floor(event.offsetY / cellSize);
 
-    // Переключаем состояние клетки
     grid[y][x] = grid[y][x] === 1 ? 0 : 1;
 
-    // Перерисовываем сетку после изменения
     drawGrid();
 });
 
-// Обработчик для кнопки запуска игры
 const startButton = document.getElementById("startButton");
 startButton.addEventListener("click", () => {
-    isStarted = true; // Игра начинается
-    startAnimation(); // Запуск анимации
-    startButton.disabled = true; // Делаем кнопку неактивной, чтобы нельзя было изменить поле
+    isStarted = true; 
+    startAnimation(); 
+    startButton.disabled = true; 
 });
 
-// Обработчик для кнопки паузы
 const pauseButton = document.getElementById("pauseButton");
 pauseButton.addEventListener("click", () => {
-    isPaused = !isPaused;  // Переключаем состояние паузы
-    pauseButton.textContent = isPaused ? 'Resume' : 'Pause';  // Меняем текст на кнопке
+    isPaused = !isPaused;  
+    pauseButton.textContent = isPaused ? 'Resume' : 'Pause'; 
 });
 
-// Обработчик для кнопки стопа
+
 const stopButton = document.getElementById("stopButton");
 stopButton.addEventListener("click", () => {
-    stopAnimation();  // Останавливаем анимацию
-    clearGrid();  // Очищаем поле
-    startButton.disabled = false; // Включаем кнопку старта
-    isStarted = false; // Игра еще не началась
+    stopAnimation(); 
+    clearGrid();  
+    startButton.disabled = false; 
+    isStarted = false; 
 });
 
-// Валидация ввода размера сетки
+
 function validateGridSize(inputValue) {
     const value = parseInt(inputValue, 10);
     return !isNaN(value) && value > 0;
 }
 
-// Обработчик для кнопки применения размера сетки
+
 const applyButton = document.getElementById("applyButton");
 applyButton.addEventListener("click", () => {
     const colsInput = document.getElementById("colsInput").value;
@@ -165,69 +158,63 @@ applyButton.addEventListener("click", () => {
         rows = parseInt(rowsInput, 10);
         canvas.width = cols * cellSize;
         canvas.height = rows * cellSize;
-        grid = createGrid(); // Обновляем сетку
-        drawGrid(); // Перерисовываем сетку с новыми размерами
-        startButton.disabled = false; // Разрешаем запуск игры
+        grid = createGrid(); 
+        drawGrid();
+        startButton.disabled = false; 
     } else {
         alert("Please enter valid positive numbers greater than zero.");
     }
 });
 
-// Сохраняем состояние в историю
 function saveState() {
     if (currentStep === history.length - 1) {
-        history.push(JSON.parse(JSON.stringify(grid))); // Сохраняем копию текущего состояния
+        history.push(JSON.parse(JSON.stringify(grid))); 
     } else {
-        history = history.slice(0, currentStep + 1); // Отрезаем "будущие" состояния
+        history = history.slice(0, currentStep + 1); 
         history.push(JSON.parse(JSON.stringify(grid)));
     }
-    currentStep++; // Переходим на следующий шаг в истории
+    currentStep++;
 }
 
-// Кнопка "Step Backward"
 const stepBackwardButton = document.getElementById("stepBackwardButton");
 stepBackwardButton.addEventListener("click", () => {
-    if (currentStep > 0) { // Шагать назад можно только если не на самом первом шаге
+    if (currentStep > 0) { 
         currentStep--;
-        grid = JSON.parse(JSON.stringify(history[currentStep])); // Возвращаемся на шаг назад
+        grid = JSON.parse(JSON.stringify(history[currentStep]));
         drawGrid();
     }
 });
 
-// Кнопка "Step Forward"
 const stepForwardButton = document.getElementById("stepForwardButton");
 stepForwardButton.addEventListener("click", () => {
-    if (currentStep < history.length - 1) { // Шагать вперед можно только если не на самом последнем шаге
+    if (currentStep < history.length - 1) { 
         currentStep++;
-        grid = JSON.parse(JSON.stringify(history[currentStep])); // Шагаем вперед
+        grid = JSON.parse(JSON.stringify(history[currentStep])); 
         drawGrid();
     }
 });
 
-// Функция для случайного заполнения клеток
 function randomFillGrid() {
     for (let i = 0; i < rows; i++) {
         for (let j = 0; j < cols; j++) {
-            grid[i][j] = Math.random() < 0.3 ? 1 : 0;  // 30% вероятности для живой клетки
+            grid[i][j] = Math.random() < 0.3 ? 1 : 0;  
         }
     }
-    history = [JSON.parse(JSON.stringify(grid))]; // Очищаем историю после случайного заполнения
+    history = [JSON.parse(JSON.stringify(grid))]; 
     currentStep = 0;
     drawGrid();
 }
 
-// Привязка кнопки случайного заполнения
 const randomFillButton = document.getElementById("randomFillButton");
 randomFillButton.addEventListener("click", randomFillGrid);
 
-// Функция для проверки окончания игры
 function checkGameOver() {
     for (let i = 0; i < rows; i++) {
         for (let j = 0; j < cols; j++) {
             if (grid[i][j] === 1) {
-                return false; // Есть хотя бы одна живая клетка
+                return false; 
             }
         }
     }
-    return true; // Все клетки мертвые
+    return true; 
 }
