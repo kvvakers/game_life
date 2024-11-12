@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game of Life</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+            display: block;
+            margin: 20px auto;
+        }
+        button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        input {
+            display: block;
+            margin: 10px auto;
+            font-size: 16px;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+<canvas id="gameCanvas"></canvas>
+<div style="display: flex;">
+    <div style="margin-right: 50px;">
+        <label for="colsInput">Width (columns):</label>
+        <input type="text" id="colsInput" value="50" />
+    </div>
+    <div>
+        <label for="rowsInput">Height (rows):</label>
+        <input type="text" id="rowsInput" value="50" />
+    </div>
+    <label for="liveColor">Live Cell Color:</label>
+    <input type="color" id="liveColor" value="#000000"> <!-- По умолчанию черный -->
+
+    <label for="deadColor">Dead Cell Color:</label>
+    <input type="color" id="deadColor" value="#FFFFFF">
+</div>
+<div style="display:flex; justify-content: space-between; width: 60%;">
+    <button id="applyButton">Apply Grid Size</button>
+    <button id="randomFillButton">Random Fill</button>
+    <button id="startButton">Start Game</button>
+    <button id="pauseButton">Pause</button>
+    <button id="stopButton">Stop</button>
+    <button id="stepForwardButton">Step Forward</button>
+    <button id="stepBackwardButton">Step Back</button>
+</div>
+<script src="game.js"></script>
+</body>
+</html>
